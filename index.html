@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F6F1E7" />
+  <title>C&amp;L Games — Convite de sala</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="C&amp;L Games" />
+  <meta property="og:title" content="C&amp;L Games — Convite de sala" />
+  <meta property="og:description" content="Toque para entrar direto na mesa com seu convite." />
+  <meta property="og:image" content="https://alexsscoelho.github.io/Ludo-Royal-Releases/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="C&amp;L Games — Convite de sala" />
+  <meta name="twitter:description" content="Toque para entrar direto na mesa com seu convite." />
+  <meta name="twitter:image" content="https://alexsscoelho.github.io/Ludo-Royal-Releases/logo.png" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F6F1E7;
+      color: #26160B;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 340px;
+      background: #FFFDF9;
+      border: 1px solid #DFD2BC;
+      border-radius: 22px;
+      padding: 26px 22px;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(38, 22, 11, 0.12);
+    }
+    .logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(38, 22, 11, 0.16);
+    }
+    .brand {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #D94E24;
+      margin-bottom: 6px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+    p {
+      margin: 0 0 20px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: #5C4938;
+    }
+    .cta {
+      display: inline-block;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #E75B2E 0%, #D94E24 100%);
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 3px 0 #84240B;
+    }
+    .hint {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #7D6A56;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="./logo.png" alt="C&amp;L Games" />
+    <div class="brand">C&amp;L GAMES</div>
+    <h1 id="title">Convite de sala</h1>
+    <p id="desc">Toque para entrar direto na mesa.</p>
+    <a class="cta" id="cta" href="ludoroyal://join">Abrir no C&amp;L Games</a>
+    <div class="hint" id="hint">Se o app não abrir sozinho, toque no botão acima.</div>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var fromParam = params.get("code") || "";
+      var bare = (window.location.search || "").replace(/^\?/, "").split("&")[0] || "";
+      var hash = (window.location.hash || "").replace(/^#\/?/, "");
+      var candidates = [fromParam, bare, hash];
+      var code = "";
+      for (var i = 0; i < candidates.length; i++) {
+        var c = candidates[i].trim().toUpperCase();
+        if (/^[A-Z0-9]{6}$/.test(c)) { code = c; break; }
+      }
+      if (!code) {
+        document.getElementById("title").textContent = "C&L Games";
+        document.getElementById("desc").textContent = "Abra o aplicativo para criar ou entrar em uma sala.";
+        document.getElementById("cta").style.display = "none";
+        document.getElementById("hint").style.display = "none";
+        return;
+      }
+      var encoded = encodeURIComponent(code);
+      var deepLink = "ludoroyal://join/" + encoded;
+      var androidIntent = "intent://join/" + encoded + "#Intent;scheme=ludoroyal;package=com.alexs.ludoroyal;end";
+      var isAndroid = /Android/i.test(navigator.userAgent || "");
+      var destination = isAndroid ? androidIntent : deepLink;
+      document.title = "C&L Games · Sala " + code;
+      document.getElementById("title").textContent = "Sala " + code;
+      document.getElementById("cta").setAttribute("href", destination);
+      window.location.replace(destination);
+    })();
+  </script>
+</body>
+</html>
